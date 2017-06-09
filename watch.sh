@@ -4,11 +4,19 @@
 
 ARTIFACT_PATH=./out/artifacts/spring_npm_frontend_boilerplate_war_exploded/
 
-#watchify ./frontend/app/app.js -t [babelify] --debug -o ${ARTIFACT_PATH}app.js -v &
-# call watchify from ./frontend, because babelify can't resolve "babelify" plugin otherwise
+# watch Javascript files
 sh ./frontend/watchify-artifact.sh &
+# watch pug files
+sh ./frontend/watch-pug-artifact.sh &
 
-while true; do cp -u ./frontend/app/*.html ${ARTIFACT_PATH}; sleep 2; done &
+# uncomment this block if need to watch static html files
+#while true; do
+#    # watch static html files ("cp -u" copies file only when it's changed)
+#    cp -u ./frontend/app/*.html ${ARTIFACT_PATH};
+#
+#    sleep 2;
+#done &
+
 browser-sync start --proxy http://localhost:8080 --files ${ARTIFACT_PATH}* --port 3000 --reload-delay 100 &
 
 wait
