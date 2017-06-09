@@ -1,10 +1,10 @@
 package com.zhukovsd.controller;
 
+import com.zhukovsd.service.TestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.*;
 
 /**
  * Created by zhukovsd on 01.06.2017.
@@ -12,9 +12,16 @@ import java.awt.*;
 
 @RestController
 public class TestController {
+    private final TestService service;
+
+    @Autowired
+    public TestController(TestService service) {
+        this.service = service;
+    }
+
     @RequestMapping(value = "/hello/{name}", method = RequestMethod.GET)
     public Message message(@PathVariable("name") String name) throws Exception {
-        Message msg = new Message(name, "Hello " + name);
+        Message msg = new Message(name, service.greet(name));
 
         if (!name.equals("mate")) {
             throw new Exception("you are not my mate");
